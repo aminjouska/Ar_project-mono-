@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Architecture</title>
+</head>
+<body style="margin:0; background:#1a1a1a; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+    <div style="text-align:center;">
+        <h2>در حال بارگذاری مدل...</h2>
+        <p>Launching AR Experience</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const baseUrl = "https://raw.githubusercontent.com/aminjouska/Ar_project-mono-/main/";
+            
+            // اسم دقیق فایل‌های تو با رعایت فاصله‌ها
+            const usdzFile = "ar%20ios%20fainal%20(1).usdz";
+            const glbFile = "ar%20android%20fainal%20(1).glb";
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                window.location.replace(baseUrl + usdzFile + "#allowsRemoteModels=true");
+            } else if (/android/i.test(userAgent)) {
+                const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + baseUrl + glbFile + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
+                window.location.replace(intent);
+            } else {
+                alert("لطفاً با گوشی اسکن کنید");
+            }
+        };
+    </script>
+</body>
+</html>
