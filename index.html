@@ -3,32 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR View</title>
+    <title>AR Experience</title>
 </head>
 <body style="margin:0; background:#1a1a1a; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
     <div style="text-align:center;">
-        <h2>در حال اتصال به دوربین...</h2>
-        <p>Launching AR Mode</p>
+        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto 20px;"></div>
+        <h2>در حال فراخوانی مدل AR...</h2>
+        <p>Launching 3D Model</p>
     </div>
+    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
 
     <script>
         window.onload = function() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            // آدرس پایه مخزن تو
             const baseUrl = "https://raw.githubusercontent.com/aminjouska/Ar_project-mono-/main/";
             
-            // لینک‌های جدید بدون فاصله و پرانتز
-            const usdzFile = "ios.usdz";
-            const glbFile = "android.glb";
+            // اسم فایل‌های جدیدت
+            const usdzFile = "ar.ios.usdz";
+            const glbFile = "ar.android.glb";
 
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // مخصوص آیفون
-                window.location.replace(baseUrl + usdzFile + "#allowsRemoteModels=true");
+                // برای آیفون
+                window.location.replace(baseUrl + usdzFile);
             } else if (/android/i.test(userAgent)) {
-                // مخصوص اندروید
+                // برای اندروید (مستقیم به دوربین)
                 const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + baseUrl + glbFile + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
                 window.location.replace(intent);
             } else {
-                alert("لطفاً با گوشی اسکن کنید");
+                document.querySelector('h2').innerText = "Please Scan with Mobile";
             }
         };
     </script>
