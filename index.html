@@ -1,3 +1,53 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Experience</title>
+    <style>
+        body {
+            margin: 0;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            overflow: hidden;
+        }
+        .container { text-align: center; padding: 20px; }
+        .loader {
+            border: 4px solid #333;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none; /* فقط اگر خودکار باز نشد نمایش داده می‌شود */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="loader"></div>
+        <h2 id="status">در حال فراخوانی مدل سه بعدی...</h2>
+        <p id="sub-status">لطفاً چند لحظه صبر کنید</p>
+        <button id="ar-button">نمایش دستی مدل (AR)</button>
+    </div>
+
     <script>
         window.onload = function() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -5,24 +55,46 @@
             
             const usdzFile = "ar.ios.usdz";
             const glbFile = "ar.android.glb";
+            const btn = document.getElementById('ar-button');
 
-            // مخصوص آیفون و آیپد
+            // --- بخش مخصوص آیفون و آیپد ---
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // ساخت یک لینک موقت برای فریب دادن سافاری جهت باز کردن Quick Look
+                const fullUsdzUrl = baseUrl + usdzFile;
+                
+                // ایجاد تگ مخصوص اپل برای فراخوانی Quick Look
                 const anchor = document.createElement('a');
                 anchor.setAttribute('rel', 'ar');
-                anchor.appendChild(document.createElement('img'));
-                anchor.setAttribute('href', baseUrl + usdzFile);
-                anchor.click(); // اجرای کلیک خودکار
+                anchor.setAttribute('href', fullUsdzUrl);
+                const img = document.createElement('img');
+                anchor.appendChild(img);
+                
+                // اجرای خودکار
+                setTimeout(() => {
+                    anchor.click();
+                    btn.style.display = "inline-block"; // نمایش دکمه برای اطمینان
+                    btn.onclick = () => anchor.click();
+                    document.getElementById('status').innerText = "آماده نمایش";
+                }, 1000);
             } 
-            // مخصوص اندروید
+            
+            // --- بخش مخصوص اندروید ---
             else if (/android/i.test(userAgent)) {
-                const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + baseUrl + glbFile + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
-                window.location.replace(intent);
+                const fullGlbUrl = baseUrl + glbFile;
+                const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + fullGlbUrl + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
+                
+                setTimeout(() => {
+                    window.location.replace(intent);
+                    btn.style.display = "inline-block";
+                    btn.onclick = () => window.location.replace(intent);
+                }, 1000);
             } 
+            
+            // --- سایر دستگاه‌ها ---
             else {
-                document.querySelector('h2').innerText = "لطفاً با گوشی اسکن کنید";
+                document.getElementById('status').innerText = "لطفاً با موبایل اسکن کنید";
+                document.getElementById('sub-status').innerText = "تجربه واقعیت افزوده (AR) مخصوص گوشی‌های هوشمند است.";
             }
         };
     </script>
-    
+</body>
+</html>
