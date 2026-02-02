@@ -1,39 +1,28 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR Experience</title>
-</head>
-<body style="margin:0; background:#1a1a1a; color:white; display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
-    <div style="text-align:center;">
-        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto 20px;"></div>
-        <h2>در حال فراخوانی مدل AR...</h2>
-        <p>Launching 3D Model</p>
-    </div>
-    <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
-
     <script>
         window.onload = function() {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            // آدرس پایه مخزن تو
             const baseUrl = "https://raw.githubusercontent.com/aminjouska/Ar_project-mono-/main/";
             
-            // اسم فایل‌های جدیدت
             const usdzFile = "ar.ios.usdz";
             const glbFile = "ar.android.glb";
 
+            // مخصوص آیفون و آیپد
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // برای آیفون
-                window.location.replace(baseUrl + usdzFile);
-            } else if (/android/i.test(userAgent)) {
-                // برای اندروید (مستقیم به دوربین)
+                // ساخت یک لینک موقت برای فریب دادن سافاری جهت باز کردن Quick Look
+                const anchor = document.createElement('a');
+                anchor.setAttribute('rel', 'ar');
+                anchor.appendChild(document.createElement('img'));
+                anchor.setAttribute('href', baseUrl + usdzFile);
+                anchor.click(); // اجرای کلیک خودکار
+            } 
+            // مخصوص اندروید
+            else if (/android/i.test(userAgent)) {
                 const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + baseUrl + glbFile + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
                 window.location.replace(intent);
-            } else {
-                document.querySelector('h2').innerText = "Please Scan with Mobile";
+            } 
+            else {
+                document.querySelector('h2').innerText = "لطفاً با گوشی اسکن کنید";
             }
         };
     </script>
-</body>
-</html>
+    
