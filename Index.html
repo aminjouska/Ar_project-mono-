@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Architecture Project</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #1a1a1a; color: white; text-align: center; }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Launching AR Experience...</h2>
+        <p>لطفاً چند لحظه صبر کنید</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // لینک‌های مستقیم به فایل‌های تو در همین مخزن گیت‌هاب
+            const baseUrl = "https://raw.githubusercontent.com/aminjouska/Ar_project-mono-/main/";
+            const usdzUrl = baseUrl + "ar%20ios%20fainal%20(1).usdz";
+            const glbUrl = baseUrl + "ar%20android%20fainal%20(1).glb";
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                // انتقال خودکار برای آیفون
+                window.location.replace(usdzUrl + "#allowsRemoteModels=true");
+            } else if (/android/i.test(userAgent)) {
+                // انتقال خودکار برای اندروید به حالت دوربین
+                const intent = "intent://arvr.google.com/scene-viewer/1.0?file=" + glbUrl + "&mode=ar_only#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end";
+                window.location.replace(intent);
+            } else {
+                document.querySelector('h2').innerText = "Please open this link on a Smartphone";
+            }
+        };
+    </script>
+</body>
+</html>
+
